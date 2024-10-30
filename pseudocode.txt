@@ -1,0 +1,6 @@
+1. What are you making ? A basic calculator that does basic math.
+2. Run the file and a prompt appears in the command line.
+3. mention that only one type of operation is possible at once, use set function and remove additional mathematical operators 
+if the length is more than 1.
+4. once that's true, extract values and operators. Once there is only one operator it's easy to calculate the values.
+5. process the values and loop through it with the calculation. 
