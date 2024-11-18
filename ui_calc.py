@@ -5,9 +5,12 @@ from cl_calculator import ui_input
 ##tasks
 # take button input - done!
 # take keyboard input - done!
-# fix issues with args
-# list previous calculation on right
+# fix issues with args - done!
+# list previous calculation on right - complicated not done!
 # fix scaling
+# use threading to make it work seamlessly
+
+shared_string: list[str] = []
 
 
 def main():
@@ -28,8 +31,8 @@ class Application(tk.Tk):
         frame = InputForm(self)
         frame.grid(row=0, column=0, padx=5, pady=5)
 
-        frame = LabelBox(self)
-        frame.grid(row=0, column=1, padx=5, pady=5)
+        frame_history = LabelBox(self)
+        frame_history.grid(row=0, column=1, padx=5, pady=5)
 
 
 class InputForm(ttk.Frame):
@@ -39,12 +42,16 @@ class InputForm(ttk.Frame):
         self.columnconfigure(0, weight=3)
         self.rowconfigure(1, weight=3)
 
-        self.entry = ttk.Entry(self)
+        self.entry = ttk.Entry(self, justify="right")
         self.entry.grid(
-            row=0, column=0, columnspan=2, rowspan=2, sticky="ewns", ipady=10
+            row=0,
+            column=0,
+            columnspan=2,
+            rowspan=2,
+            sticky="ewns",
+            ipady=10,
         )
         self.entry.focus()
-
         self.entry.bind("<Return>", self.pipeline)
 
         self.entry_btn = ttk.Button(self, text="=", command=self.pipeline)
@@ -129,8 +136,6 @@ class InputForm(ttk.Frame):
         )
         self.entry_btn17.grid(row=6, column=2)
 
-        # self.text_list = tk.Listbox(self)
-        # self.text_list.grid(row=1, column=0, columnspan=3, sticky="nsew")
 
     def add_to_list(self, _event=None):
         text = self.entry.get()
@@ -142,33 +147,35 @@ class InputForm(ttk.Frame):
         self.entry.delete(0, tk.END)
 
     def button_input(self, input):
-        print(input)
         self.entry.insert(tk.END, input)
 
     def pipeline(self, _=None):
         text = self.entry.get()
         if text:
             result = ui_input(text)
-            # print(result)
             self.entry.delete(0, tk.END)
             if result is None:
                 self.entry.delete(0, tk.END)
             else:
+                shared_string.append(f"{result} = {text}")
                 self.entry.insert(tk.END, result)
-            # self.entry.insert(tk.END, result)
-            # x = LabelBox
-            # x.inset_text(self, result)  # how to send the result to the label box?
 
 
 class LabelBox(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.text_list = tk.Listbox(self)
-        self.text_list.grid(row=0, column=3, columnspan=3, sticky="nsew")
+        self.label = ttk.Label(
+            self, text="History", anchor="center", border=2, relief="groove"
+        )
+        self.label.grid(row=0, column=3, columnspan=3, sticky="we")
 
-    def inset_text(self, text):
-        self.text_list.insert(tk.END, text)
+        self.text_list = tk.Listbox(self, border=2, relief="groove")
+        self.text_list.grid(row=1, column=3, columnspan=3, sticky="nsew")
+
+    def inset_text(self):
+        for i in shared_string:
+            self.text_list.insert(tk.END, i)
 
 
 if __name__ == "__main__":
