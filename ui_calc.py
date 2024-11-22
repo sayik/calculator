@@ -136,6 +136,11 @@ class InputForm(ttk.Frame):
         )
         self.entry_btn17.grid(row=6, column=2)
 
+        for i in range(0, 3):
+            self.entry_btn17 = ttk.Button(
+                self, text="%", command=lambda: self.button_input("%")
+            )
+        self.entry_btn17.grid(row=6, column=2)
 
     def add_to_list(self, _event=None):
         text = self.entry.get()
