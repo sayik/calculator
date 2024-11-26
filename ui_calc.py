@@ -61,86 +61,27 @@ class InputForm(ttk.Frame):
         self.entry_btn2.grid(row=1, column=2)
 
         # NUM PAD
-        self.entry_btn3 = ttk.Button(
-            self, text="1", command=lambda: self.button_input(1)
-        )
-        self.entry_btn3.grid(row=2, column=0)
 
-        self.entry_btn4 = ttk.Button(
-            self, text="2", command=lambda: self.button_input(2)
-        )
-        self.entry_btn4.grid(row=2, column=1)
+        elements = [1, 2, 3, 4, 5, 6, 7, 8, 9, "-", 0, "+", "*", "**", "/"]
 
-        self.entry_btn5 = ttk.Button(
-            self, text="3", command=lambda: self.button_input(3)
-        )
-        self.entry_btn5.grid(row=2, column=2)
+        start_index = 0
+        number_rows = 5
 
-        self.entry_btn6 = ttk.Button(
-            self, text="4", command=lambda: self.button_input(4)
-        )
-        self.entry_btn6.grid(row=3, column=0)
+        for j in range(number_rows):
+            for i in range(start_index, start_index + 3):
+                self.entry_btn = ttk.Button(
+                    self,
+                    text=elements[i],
+                    command=lambda val=elements[i]: self.button_input(val),
+                )
+                self.entry_btn.grid(row=j + 2, column=i - start_index)
+            start_index += 3
 
-        self.entry_btn7 = ttk.Button(
-            self, text="5", command=lambda: self.button_input(5)
-        )
-        self.entry_btn7.grid(row=3, column=1)
-
-        self.entry_btn8 = ttk.Button(
-            self, text="6", command=lambda: self.button_input(6)
-        )
-        self.entry_btn8.grid(row=3, column=2)
-
-        self.entry_btn9 = ttk.Button(
-            self, text="7", command=lambda: self.button_input(7)
-        )
-        self.entry_btn9.grid(row=4, column=0)
-
-        self.entry_btn10 = ttk.Button(
-            self, text="8", command=lambda: self.button_input(8)
-        )
-        self.entry_btn10.grid(row=4, column=1)
-
-        self.entry_btn11 = ttk.Button(
-            self, text="9", command=lambda: self.button_input(9)
-        )
-        self.entry_btn11.grid(row=4, column=2)
-
-        self.entry_btn12 = ttk.Button(
-            self, text="-", command=lambda: self.button_input("-")
-        )
-        self.entry_btn12.grid(row=5, column=0)
-
-        self.entry_btn13 = ttk.Button(
-            self, text="0", command=lambda: self.button_input(0)
-        )
-        self.entry_btn13.grid(row=5, column=1)
-
-        self.entry_btn14 = ttk.Button(
-            self, text="+", command=lambda: self.button_input("+")
-        )
-        self.entry_btn14.grid(row=5, column=2)
-
-        self.entry_btn15 = ttk.Button(
-            self, text="*", command=lambda: self.button_input("*")
-        )
-        self.entry_btn15.grid(row=6, column=0)
-
-        self.entry_btn16 = ttk.Button(
-            self, text="/", command=lambda: self.button_input("/")
-        )
-        self.entry_btn16.grid(row=6, column=1)
-
-        self.entry_btn17 = ttk.Button(
-            self, text="%", command=lambda: self.button_input("%")
-        )
-        self.entry_btn17.grid(row=6, column=2)
-
-        for i in range(0, 3):
-            self.entry_btn17 = ttk.Button(
-                self, text="%", command=lambda: self.button_input("%")
-            )
-        self.entry_btn17.grid(row=6, column=2)
+            """Note on lambda function here - Why It Appears to Only Return the val:
+Each time you call a lambda, it just returns the default argument value (val), 
+which was set when the lambda was created. Since each lambda has its own 
+local val (the value of x at the time the lambda was defined), calling the lambdas will 
+give you a list of values from 0 to 4. Also remember the concept of late binding"""
 
     def add_to_list(self, _event=None):
         text = self.entry.get()
@@ -152,6 +93,7 @@ class InputForm(ttk.Frame):
         self.entry.delete(0, tk.END)
 
     def button_input(self, input):
+        # print(input)
         self.entry.insert(tk.END, input)
 
     def pipeline(self, _=None):
