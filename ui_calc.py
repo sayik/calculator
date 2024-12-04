@@ -7,6 +7,7 @@ from cl_calculator import ui_input
 # take keyboard input - done!
 # fix issues with args - done!
 # list previous calculation on right - complicated not done!
+# refactor buttons - done!
 # fix scaling
 # use threading to make it work seamlessly
 
@@ -33,6 +34,8 @@ class Application(tk.Tk):
 
         frame_history = LabelBox(self)
         frame_history.grid(row=0, column=1, padx=5, pady=5)
+
+        frame.set_history_box(frame_history)
 
 
 class InputForm(ttk.Frame):
@@ -77,11 +80,6 @@ class InputForm(ttk.Frame):
                 self.entry_btn.grid(row=j + 2, column=i - start_index)
             start_index += 3
 
-            """Note on lambda function here - Why It Appears to Only Return the val:
-Each time you call a lambda, it just returns the default argument value (val), 
-which was set when the lambda was created. Since each lambda has its own 
-local val (the value of x at the time the lambda was defined), calling the lambdas will 
-give you a list of values from 0 to 4. Also remember the concept of late binding"""
 
     def add_to_list(self, _event=None):
         text = self.entry.get()
@@ -104,8 +102,14 @@ give you a list of values from 0 to 4. Also remember the concept of late binding
             if result is None:
                 self.entry.delete(0, tk.END)
             else:
-                shared_string.append(f"{result} = {text}")
+                shared_string.append(f"{text} = {result}")
+                self.history_box.inset_text()
                 self.entry.insert(tk.END, result)
+
+    def set_history_box(self, history_box):
+        """Set the reference to the history box."""
+        self.history_box = history_box
+
 
 
 class LabelBox(ttk.Frame):
@@ -119,8 +123,10 @@ class LabelBox(ttk.Frame):
 
         self.text_list = tk.Listbox(self, border=2, relief="groove")
         self.text_list.grid(row=1, column=3, columnspan=3, sticky="nsew")
-
+        self.text_list.insert(tk.END, shared_string)
+    
     def inset_text(self):
+        self.text_list.delete(0, tk.END)
         for i in shared_string:
             self.text_list.insert(tk.END, i)
 
