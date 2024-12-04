@@ -84,14 +84,12 @@ class InputForm(ttk.Frame):
     def add_to_list(self, _event=None):
         text = self.entry.get()
         if text:
-            # self.entry.insert(tk.END, text)
             self.entry.delete(0, tk.END)
 
     def clear_list(self):
         self.entry.delete(0, tk.END)
 
     def button_input(self, input):
-        # print(input)
         self.entry.insert(tk.END, input)
 
     def pipeline(self, _=None):
